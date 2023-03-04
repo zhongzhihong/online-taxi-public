@@ -5,6 +5,9 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: 127.0.0.1:8848
+        server-addr: 192.168.75.157:8848
   application:
     name: api-passenger
+  redis:
+    host: 192.168.75.157
+    port: 6379
