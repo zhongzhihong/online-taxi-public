@@ -15,7 +15,7 @@ public class NumberCodeController {
         System.out.println("size:" + size);
         // 生成验证码
         int mathRandom = (int) ((Math.random() * 9 + 1) * (Math.pow(10, size - 1)));
-        System.out.println(mathRandom);
+        System.out.println("service-verificationCode服务生成的验证码为：" + mathRandom);
 
         //返回数据
         NumberCodeResponse response = new NumberCodeResponse();
