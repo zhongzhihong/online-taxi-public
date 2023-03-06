@@ -12,8 +12,8 @@ public class RedisPrefixUtils {
     }
 
     // 根据token，生成key
-    public static String GeneratorKeyByToken(String phone, String identity) {
-        return TOKENPREFIX + phone + "-" + identity;
+    public static String GeneratorKeyByToken(String phone, String identity, String tokenType) {
+        return TOKENPREFIX + phone + "-" + identity + "-" + tokenType;
     }
 
 }

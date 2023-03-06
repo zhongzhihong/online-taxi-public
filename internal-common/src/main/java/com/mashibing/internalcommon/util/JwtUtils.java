@@ -27,11 +27,11 @@ public class JwtUtils {
     private static final String JWT_TOKEN_TIME = "tokenTime";
 
     // 生成token
-    public static String generatorToken(String phone, String identity) {
+    public static String generatorToken(String phone, String identity, String tokenType) {
         Map<String, String> map = new HashMap<>();
         map.put(JWT_KEY_PHONE, phone);
         map.put(JWT_KEY_IDENTITY, identity);
-        //map.put(JWT_TOKEN_TYPE, tokenType);
+        map.put(JWT_TOKEN_TYPE, tokenType);
 
         // 防止每次生成的token一样
         map.put(JWT_TOKEN_TIME, Calendar.getInstance().getTime().toString());
@@ -83,7 +83,7 @@ public class JwtUtils {
     }
 
     public static void main(String[] args) {
-        String s = generatorToken("13910733521", "1");
+        String s = generatorToken("13910733521", "1", "accessToken");
         System.out.println("--------生成token---------");
         System.out.println("生成的token为：" + s);
         System.out.println("--------解析token---------");
