@@ -30,6 +30,8 @@ public class VerificationCodeService {
 
     public static String VERIFICATIONCODEPREFIX = "VerificationCode-";
 
+    public static String TOKENPREFIX = "token-";
+
     public ResponseResult getCode(String passengerPhone) {
         // 调用验证码服务，获取验证码
         ResponseResult<NumberCodeResponse> numberCodeResponse = serviceVerificationCodeClient.getNumberCode(6);
@@ -46,6 +48,11 @@ public class VerificationCodeService {
     // 根据手机号，生成key
     public String GeneratorKeyByPassengerPhone(String passengerPhone) {
         return VERIFICATIONCODEPREFIX + passengerPhone;
+    }
+
+    // 根据token，生成key
+    public String GeneratorKeyByToken(String phone, String identity) {
+        return TOKENPREFIX + phone + "-" + identity;
     }
 
     public ResponseResult checkCode(String passengerPhone, String verificationCode) {
@@ -70,6 +77,9 @@ public class VerificationCodeService {
 
         // 颁发令牌
         String token = JwtUtils.generatorToken(passengerPhone, IdentityConstants.PASSENGER_IDENTITY);
+        // 将令牌存入Redis
+        String keyByToken = GeneratorKeyByToken(passengerPhone, IdentityConstants.PASSENGER_IDENTITY);
+        stringRedisTemplate.opsForValue().set(keyByToken, token, 30, TimeUnit.DAYS);
         //响应
         TokenResponse tokenResponse = new TokenResponse();
         tokenResponse.setToken(token);

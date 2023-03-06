@@ -43,7 +43,7 @@ public class JwtUtils {
                     builder.withClaim(k, v);
                 }
         );
-        // 整合过期时间
+        // 整合过期时间,后期通过Redis来控制有效期，所以这里进行注释
         //builder.withExpiresAt(date);
 
         // 生成 token
