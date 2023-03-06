@@ -1,8 +1,10 @@
 package com.mashibing.apipassenger.service;
 
+import com.mashibing.apipassenger.feign.ServicePassengerUserClient;
 import com.mashibing.apipassenger.feign.ServiceVerificationCodeClient;
 import com.mashibing.internalcommon.constant.CommonStatusEnum;
 import com.mashibing.internalcommon.dto.ResponseResult;
+import com.mashibing.internalcommon.request.VerificationCodeDTO;
 import com.mashibing.internalcommon.response.NumberCodeResponse;
 import com.mashibing.internalcommon.response.TokenResponse;
 import org.apache.commons.lang.StringUtils;
@@ -19,8 +21,11 @@ public class VerificationCodeService {
     @Autowired
     ServiceVerificationCodeClient serviceVerificationCodeClient;
 
-    @Resource
+    @Autowired
     StringRedisTemplate stringRedisTemplate;
+
+    @Autowired
+    ServicePassengerUserClient servicePassengerUserClient;
 
     public static String VERIFICATIONCODEPREFIX = "VerificationCode-";
 
@@ -58,6 +63,9 @@ public class VerificationCodeService {
         }
 
         // 判断原来是否有用户，并进行对应的处理
+        VerificationCodeDTO verificationCodeDTO = new VerificationCodeDTO();
+        verificationCodeDTO.setPassengerPhone(passengerPhone);
+        servicePassengerUserClient.LoginOrRegister(verificationCodeDTO);
 
         // 颁发令牌
         TokenResponse tokenResponse = new TokenResponse();
