@@ -1,5 +1,6 @@
 package com.mashibing.apipassenger.controller;
 
+import com.mashibing.internalcommon.dto.ResponseResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,5 +20,15 @@ public class TestController {
         System.out.println(s);
 
         return "test api passenger";
+    }
+
+    @GetMapping("/AuthHasToken")
+    public ResponseResult AuthHasToken() {
+        return ResponseResult.success("AuthHasToken");
+    }
+
+    @GetMapping("/AuthNoToken")
+    public ResponseResult AuthNoToken() {
+        return ResponseResult.success("AuthNoToken");
     }
 }

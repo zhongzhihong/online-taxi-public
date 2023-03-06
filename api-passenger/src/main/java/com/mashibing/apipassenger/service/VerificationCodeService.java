@@ -3,16 +3,17 @@ package com.mashibing.apipassenger.service;
 import com.mashibing.apipassenger.feign.ServicePassengerUserClient;
 import com.mashibing.apipassenger.feign.ServiceVerificationCodeClient;
 import com.mashibing.internalcommon.constant.CommonStatusEnum;
+import com.mashibing.internalcommon.constant.IdentityConstants;
 import com.mashibing.internalcommon.dto.ResponseResult;
 import com.mashibing.internalcommon.request.VerificationCodeDTO;
 import com.mashibing.internalcommon.response.NumberCodeResponse;
 import com.mashibing.internalcommon.response.TokenResponse;
+import com.mashibing.internalcommon.util.JwtUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -68,8 +69,10 @@ public class VerificationCodeService {
         servicePassengerUserClient.LoginOrRegister(verificationCodeDTO);
 
         // 颁发令牌
+        String token = JwtUtils.generatorToken(passengerPhone, IdentityConstants.PASSENGER_IDENTITY);
+        //响应
         TokenResponse tokenResponse = new TokenResponse();
-        tokenResponse.setToken("token Response");
+        tokenResponse.setToken(token);
 
         return ResponseResult.success(tokenResponse);
     }
