@@ -3,7 +3,8 @@ package com.mashibing.internalcommon.constant;
 public enum CommonStatusEnum {
     SUCCESS(1, "success"),
     FAIL(2, "fail"),
-    VERIFICATION_CODE_ERROR(1099, "验证码不正确");
+    VERIFICATION_CODE_ERROR(1099, "验证码不正确"),
+    TOKEN_ERROR(1199, "token错误");
 
     private int code;
     private String value;
