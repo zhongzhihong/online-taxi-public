@@ -9,6 +9,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="internal-common" />
         <module name="service-verificationCode" />
+        <module name="service-price" />
         <module name="api-passenger" />
         <module name="service-passenger-user" />
       </profile>
@@ -19,6 +20,7 @@
       <module name="api-passenger" options="-parameters" />
       <module name="internal-common" options="-parameters" />
       <module name="service-passenger-user" options="-parameters" />
+      <module name="service-price" options="-parameters" />
       <module name="service-verificationCode" options="-parameters" />
     </option>
   </component>
