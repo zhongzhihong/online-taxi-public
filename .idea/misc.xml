@@ -9,6 +9,7 @@
         <option value="$PROJECT_DIR$/service-passenger-user/pom.xml" />
         <option value="$PROJECT_DIR$/service-price/pom.xml" />
         <option value="$PROJECT_DIR$/service-map/pom.xml" />
+        <option value="$PROJECT_DIR$/service-driver-user/pom.xml" />
       </list>
     </option>
   </component>
