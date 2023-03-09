@@ -30,4 +30,14 @@ public class DriverUserService {
         driverUserMapper.insert(driverUser);
         return ResponseResult.success("");
     }
+
+    //修改司机信息
+    public ResponseResult updateUser(DriverUser driverUser) {
+
+        LocalDateTime now = LocalDateTime.now();
+        driverUser.setGmtModified(now);
+
+        driverUserMapper.updateById(driverUser);
+        return ResponseResult.success("");
+    }
 }
