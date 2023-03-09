@@ -7,3 +7,11 @@ spring:
     url: jdbc:mysql://192.168.75.157:3306/service-driver-user?characterEncoding=utf-8&serverTimezone=GMT%2B8
     username: root
     password: root
+
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.75.157:8848
+
+  application:
+    name: service-driver-user
