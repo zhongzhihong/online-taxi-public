@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.concurrent.TimeUnit;
 
-import static com.mashibing.internalcommon.util.RedisPrefixUtils.GeneratorKeyByPassengerPhone;
 
 @Service
 public class VerificationCodeService {
@@ -39,17 +38,17 @@ public class VerificationCodeService {
         int numberCode = numberCodeResponse.getData().getNumberCode();
 
         // 存入Redis
-        String key = RedisPrefixUtils.GeneratorKeyByPassengerPhone(passengerPhone);
+        String key = RedisPrefixUtils.GeneratorKeyByPhone(passengerPhone, IdentityConstants.PASSENGER_IDENTITY);
         stringRedisTemplate.opsForValue().set(key, numberCode + "", 2, TimeUnit.MINUTES);
 
         // 返回信息
-        return ResponseResult.success();
+        return ResponseResult.success("");
     }
 
 
     public ResponseResult checkCode(String passengerPhone, String verificationCode) {
         // 根据手机号，去Redis中读取验证码
-        String key = GeneratorKeyByPassengerPhone(passengerPhone);
+        String key = RedisPrefixUtils.GeneratorKeyByPhone(passengerPhone, IdentityConstants.PASSENGER_IDENTITY);
         String redisCode = stringRedisTemplate.opsForValue().get(key);
         System.out.println("Redis中的验证码：" + redisCode);
 

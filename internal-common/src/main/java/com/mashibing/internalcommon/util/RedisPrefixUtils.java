@@ -7,8 +7,8 @@ public class RedisPrefixUtils {
     public static String TOKENPREFIX = "token-";
 
     // 根据手机号，生成key
-    public static String GeneratorKeyByPassengerPhone(String passengerPhone) {
-        return VERIFICATIONCODEPREFIX + passengerPhone;
+    public static String GeneratorKeyByPhone(String Phone, String identity) {
+        return VERIFICATIONCODEPREFIX + identity + "-" + Phone;
     }
 
     // 根据token，生成key
