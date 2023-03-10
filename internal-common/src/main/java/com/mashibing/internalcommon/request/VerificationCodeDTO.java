@@ -6,4 +6,5 @@ import lombok.Data;
 public class VerificationCodeDTO {
     public String passengerPhone;
     public String verificationCode;
+    public String driverPhone;
 }
