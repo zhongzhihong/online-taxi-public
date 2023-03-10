@@ -1,6 +1,7 @@
 package com.mashibing.apiboss.service;
 
 import com.mashibing.apiboss.client.ServiceDriverUserClient;
+import com.mashibing.internalcommon.dto.Car;
 import com.mashibing.internalcommon.dto.DriverUser;
 import com.mashibing.internalcommon.dto.ResponseResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,11 @@ public class DriverUserService {
 
     public ResponseResult updateUser(DriverUser driverUser) {
         serviceDriverUserClient.updateUser(driverUser);
+        return ResponseResult.success("");
+    }
+
+    public ResponseResult addCar(Car car) {
+        serviceDriverUserClient.addCar(car);
         return ResponseResult.success("");
     }
 

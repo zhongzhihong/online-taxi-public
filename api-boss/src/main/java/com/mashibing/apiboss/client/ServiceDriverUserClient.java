@@ -1,5 +1,6 @@
 package com.mashibing.apiboss.client;
 
+import com.mashibing.internalcommon.dto.Car;
 import com.mashibing.internalcommon.dto.DriverUser;
 import com.mashibing.internalcommon.dto.ResponseResult;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -15,4 +16,7 @@ public interface ServiceDriverUserClient {
 
     @PutMapping("/user")
     ResponseResult updateUser(@RequestBody DriverUser driverUser);
+
+    @PostMapping("/car")
+    ResponseResult addCar(@RequestBody Car car);
 }
