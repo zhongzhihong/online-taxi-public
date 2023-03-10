@@ -1,6 +1,7 @@
 package com.mashibing.apiboss.client;
 
 import com.mashibing.internalcommon.dto.Car;
+import com.mashibing.internalcommon.dto.DriverCarBindingRelationship;
 import com.mashibing.internalcommon.dto.DriverUser;
 import com.mashibing.internalcommon.dto.ResponseResult;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -19,4 +20,10 @@ public interface ServiceDriverUserClient {
 
     @PostMapping("/car")
     ResponseResult addCar(@RequestBody Car car);
+
+    @PostMapping("/driver-car-binding-relationship/bind")
+    ResponseResult bind(@RequestBody DriverCarBindingRelationship driverCarBindingRelationship);
+
+    @PostMapping("/driver-car-binding-relationship/unbind")
+    ResponseResult unbind(@RequestBody DriverCarBindingRelationship driverCarBindingRelationship);
 }
