@@ -22,7 +22,7 @@ public class TerminalClient {
     @Value("${URL.sid}")
     private String sid;
 
-    public ResponseResult add(String name) {
+    public ResponseResult<TerminalResponse> add(String name) {
         // 拼装请求的url
         StringBuilder url = new StringBuilder();
         url.append(AMapConfigConstants.TERMINAL_ADD);
