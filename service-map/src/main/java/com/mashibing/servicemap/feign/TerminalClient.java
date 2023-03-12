@@ -22,13 +22,15 @@ public class TerminalClient {
     @Value("${URL.sid}")
     private String sid;
 
-    public ResponseResult<TerminalResponse> add(String name) {
+    public ResponseResult<TerminalResponse> add(String name,String desc) {
         // 拼装请求的url
         StringBuilder url = new StringBuilder();
         url.append(AMapConfigConstants.TERMINAL_ADD);
         url.append("?key=" + URLKey);
         url.append("&sid=" + sid);
         url.append("&name=" + name);
+        //创建终端时加入了desc（车辆信息ID）
+        url.append("&desc=" + desc);
         System.out.println("创建终端的URL为：" + url);
 
         ResponseEntity<String> stringResponseEntity = restTemplate.postForEntity(url.toString(), null, String.class);
