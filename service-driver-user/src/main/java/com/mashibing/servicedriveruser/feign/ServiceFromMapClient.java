@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface ServiceFromMapClient {
 
     @PostMapping("/terminal/add")
-    ResponseResult<TerminalResponse> add(@RequestParam String name);
+    ResponseResult<TerminalResponse> add(@RequestParam String name,@RequestParam String desc);
 
     @PostMapping("/track/add")
     ResponseResult<TrackResponse> addTrack(@RequestParam String tid);
