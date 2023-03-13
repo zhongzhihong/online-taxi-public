@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/order")
+@RequestMapping("/order-info")
 public class OrderController {
 
     @Autowired
     OrderService orderService;
 
-    @PostMapping("/add")
+    @PostMapping("/addOrder")
     public ResponseResult add(@RequestBody OrderRequest orderRequest) {
         System.out.println(orderRequest);
         return orderService.add(orderRequest);

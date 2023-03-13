@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 @FeignClient("service-order")
 public interface ServiceOrderClient {
 
-    @PostMapping("/order/add")
+    @PostMapping("/order-info/addOrder")
     ResponseResult add(@RequestBody OrderRequest orderRequest);
 
 }
