@@ -12,10 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class OrderController {
 
     @PostMapping("/add")
-    public ResponseResult add(@RequestBody OrderRequest orderRequest){
-
+    public ResponseResult add(@RequestBody OrderRequest orderRequest) {
         System.out.println(orderRequest.getAddress());
-
         return null;
     }
 
