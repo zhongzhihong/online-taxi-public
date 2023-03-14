@@ -42,4 +42,9 @@ public class PriceRuleController {
         return priceRuleService.isLatestPrice(fareType, fareVersion);
     }
 
+    @GetMapping("/ifExist")
+    public ResponseResult<Boolean> ifExist(@RequestBody PriceRule priceRule) {
+        return priceRuleService.ifExist(priceRule);
+    }
+
 }

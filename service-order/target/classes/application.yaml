@@ -15,3 +15,7 @@ spring:
 
   application:
     name: service-order
+
+  redis:
+    host: 192.168.75.157
+    port: 6379

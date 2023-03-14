@@ -108,4 +108,21 @@ public class PriceRuleService {
             return ResponseResult.success(true);
         }
     }
+
+    public ResponseResult<Boolean> ifExist(PriceRule priceRule) {
+        String cityCode = priceRule.getCityCode();
+        String vehicleType = priceRule.getVehicleType();
+
+        QueryWrapper<PriceRule> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("city_code", cityCode);
+        queryWrapper.eq("vehicle_type", vehicleType);
+        queryWrapper.orderByDesc("fare_version");
+
+        List<PriceRule> priceRules = priceRuleMapper.selectList(queryWrapper);
+        if (priceRules.size() > 0) {
+            return ResponseResult.success(true);
+        } else {
+            return ResponseResult.success(false);
+        }
+    }
 }
