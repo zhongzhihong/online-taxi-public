@@ -53,6 +53,11 @@ public class OrderInfoService {
         if (isBlackDevice(orderRequest))
             return ResponseResult.fail(CommonStatusEnum.DEVICE_IS_BLACK.getCode(), CommonStatusEnum.DEVICE_IS_BLACK.getValue());
 
+        // 当前下单的城市和计价规则不存在，即不提供叫车服务
+        if (!ifExist(orderRequest)) {
+            return ResponseResult.fail(CommonStatusEnum.CITY_SERVICE_NOT_SERVICE.getCode(), CommonStatusEnum.CITY_SERVICE_NOT_SERVICE.getValue());
+        }
+
         // 有正在进行的订单不允许下单
         if (IsOrderGoingOn(orderRequest.getPassengerId()) > 0) {
             return ResponseResult.fail(CommonStatusEnum.ORDER_GOING_ON.getCode(), CommonStatusEnum.ORDER_GOING_ON.getValue());
@@ -69,6 +74,25 @@ public class OrderInfoService {
         orderInfoMapper.insert(orderInfo);
 
         return ResponseResult.success("");
+    }
+
+    //判断下单的城市和计价规则是否存在，即不提供叫车服务
+    public boolean ifExist(OrderRequest orderRequest) {
+        String fareType = orderRequest.getFareType();
+        // 数据库中fareType的值：10000$1
+        // index为$的位置的下标
+        int index = fareType.indexOf("$");
+        // 从0-index的值是cityCode
+        String cityCode = fareType.substring(0, index);
+        // 从index+1到最后的值是vehicleType
+        String vehicleType = fareType.substring(index + 1);
+
+        PriceRule priceRule = new PriceRule();
+        priceRule.setCityCode(cityCode);
+        priceRule.setVehicleType(vehicleType);
+
+        ResponseResult<Boolean> booleanResponseResult = servicePriceClient.ifExist(priceRule);
+        return booleanResponseResult.getData();
     }
 
     // 判断当前设备是否是黑名单设备
