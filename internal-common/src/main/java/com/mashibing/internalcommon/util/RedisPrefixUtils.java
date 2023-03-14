@@ -6,6 +6,9 @@ public class RedisPrefixUtils {
 
     public static String TOKENPREFIX = "token-";
 
+    // 黑名单设备号
+    public static String BLACKDEVICECODEPREFIX = "black-device-";
+
     // 根据手机号，生成key
     public static String GeneratorKeyByPhone(String Phone, String identity) {
         return VERIFICATIONCODEPREFIX + identity + "-" + Phone;
