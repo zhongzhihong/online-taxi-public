@@ -8,7 +8,6 @@ import com.mashibing.serviceprice.mapper.PriceRuleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -81,4 +80,32 @@ public class PriceRuleService {
         return ResponseResult.success();
     }
 
+    public ResponseResult getLatestPrice(String fareType) {
+        QueryWrapper<PriceRule> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("fare_type", fareType);
+        queryWrapper.orderByDesc("fare_version");
+
+        List<PriceRule> priceRules = priceRuleMapper.selectList(queryWrapper);
+        if (priceRules.size() > 0) {
+            return ResponseResult.success(priceRules.get(0));
+        } else {
+            return ResponseResult.fail(CommonStatusEnum.PRICE_RULE_EMPTY.getCode(), CommonStatusEnum.PRICE_RULE_EMPTY.getValue());
+        }
+    }
+
+    public ResponseResult<Boolean> isLatestPrice(String fareType, Integer fareVersion) {
+
+        ResponseResult<PriceRule> latestPrice = getLatestPrice(fareType);
+        if (latestPrice.getCode() == CommonStatusEnum.PRICE_RULE_EMPTY.getCode()) {
+            return ResponseResult.fail(CommonStatusEnum.PRICE_RULE_EMPTY.getCode(), CommonStatusEnum.PRICE_RULE_EMPTY.getValue());
+        }
+
+        PriceRule data = latestPrice.getData();
+        Integer fareVersionDB = data.getFareVersion();
+        if (fareVersionDB > fareVersion) {
+            return ResponseResult.success(false);
+        } else {
+            return ResponseResult.success(true);
+        }
+    }
 }

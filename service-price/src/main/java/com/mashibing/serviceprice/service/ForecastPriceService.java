@@ -27,6 +27,7 @@ public class ForecastPriceService {
     @Autowired
     PriceRuleMapper priceRuleMapper;
 
+
     public ResponseResult forecastPrice(String depLongitude, String depLatitude, String destLongitude, String destLatitude,
                                         String cityCode, String vehicleType) {
 
@@ -70,6 +71,8 @@ public class ForecastPriceService {
         forecastPriceResponse.setPrice(price);
         forecastPriceResponse.setCityCode(cityCode);
         forecastPriceResponse.setVehicleType(vehicleType);
+        forecastPriceResponse.setFareType(priceRule.getFareType());
+        forecastPriceResponse.setFareVersion(priceRule.getFareVersion());
         return ResponseResult.success(forecastPriceResponse);
     }
 
