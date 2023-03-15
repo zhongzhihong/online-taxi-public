@@ -3,11 +3,9 @@ package com.mashibing.servicedriveruser.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.mashibing.internalcommon.constant.CommonStatusEnum;
 import com.mashibing.internalcommon.constant.DriverCarConstants;
-import com.mashibing.internalcommon.dto.DriverCarBindingRelationship;
-import com.mashibing.internalcommon.dto.DriverUser;
-import com.mashibing.internalcommon.dto.DriverUserWorkStatus;
-import com.mashibing.internalcommon.dto.ResponseResult;
+import com.mashibing.internalcommon.dto.*;
 import com.mashibing.internalcommon.response.OrderDriverResponse;
+import com.mashibing.servicedriveruser.mapper.CarMapper;
 import com.mashibing.servicedriveruser.mapper.DriverCarBindingRelationshipMapper;
 import com.mashibing.servicedriveruser.mapper.DriverUserMapper;
 import com.mashibing.servicedriveruser.mapper.DriverUserWorkStatusMapper;
@@ -29,6 +27,9 @@ public class DriverUserService {
 
     @Autowired
     DriverCarBindingRelationshipMapper driverCarBindingRelationshipMapper;
+
+    @Autowired
+    CarMapper carMapper;
 
     //测试代码
     public ResponseResult getUser() {
@@ -99,10 +100,17 @@ public class DriverUserService {
             userQueryWrapper.eq("id", driverId);
             DriverUser driverUser = driverUserMapper.selectOne(userQueryWrapper);
 
+            QueryWrapper<Car> carQueryWrapper = new QueryWrapper<>();
+            carQueryWrapper.eq("id", carId);
+            Car car = carMapper.selectOne(carQueryWrapper);
+
             OrderDriverResponse orderDriverResponse = new OrderDriverResponse();
             orderDriverResponse.setCarId(carId);
             orderDriverResponse.setDriverId(driverId);
             orderDriverResponse.setDriverPhone(driverUser.getDriverPhone());
+
+            orderDriverResponse.setLicenseId(driverUser.getLicenseId());
+            orderDriverResponse.setVehicleNo(car.getVehicleNo());
 
             return ResponseResult.success(orderDriverResponse);
         }
