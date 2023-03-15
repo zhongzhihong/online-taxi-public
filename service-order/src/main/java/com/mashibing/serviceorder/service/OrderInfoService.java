@@ -102,7 +102,7 @@ public class OrderInfoService {
     }
 
     // 实时订单派送逻辑代码
-    public void dispatchRealTimeOrder(OrderInfo orderInfo) {
+    public synchronized void dispatchRealTimeOrder(OrderInfo orderInfo) {
         String depLongitude = orderInfo.getDepLongitude();
         String depLatitude = orderInfo.getDepLatitude();
         String center = depLatitude + "," + depLongitude;
