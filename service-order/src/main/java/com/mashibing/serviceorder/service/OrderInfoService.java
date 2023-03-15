@@ -121,14 +121,13 @@ public class OrderInfoService {
             // 获得终端
 
             // 解析终端
-            JSONArray jsonArray = JSONArray.fromObject(result.getData());
-            for (int j = 0; j < jsonArray.size(); j++) {
-                JSONObject jsonObject = jsonArray.getJSONObject(j);
-                String carIdString = jsonObject.getString("carId");
-                long carId = Long.parseLong(carIdString);
+            List<TerminalResponse> data = result.getData();
+            for (int j = 0; j < data.size(); j++) {
+                TerminalResponse terminalResponse = data.get(j);
+                Long carId = terminalResponse.getCarId();
 
-                String longitude = jsonObject.getString("longitude");
-                String latitude = jsonObject.getString("latitude");
+                String longitude = terminalResponse.getLongitude();
+                String latitude = terminalResponse.getLatitude();
 
                 // 查询是否有可派单的司机
                 ResponseResult<OrderDriverResponse> availableDriver = serviceDriverUserClient.getAvailableDriver(carId);
