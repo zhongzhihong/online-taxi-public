@@ -7,10 +7,14 @@ import com.mashibing.internalcommon.dto.OrderInfo;
 import com.mashibing.internalcommon.dto.PriceRule;
 import com.mashibing.internalcommon.dto.ResponseResult;
 import com.mashibing.internalcommon.request.OrderRequest;
+import com.mashibing.internalcommon.response.TerminalResponse;
 import com.mashibing.internalcommon.util.RedisPrefixUtils;
 import com.mashibing.serviceorder.feign.ServiceDriverUserClient;
+import com.mashibing.serviceorder.feign.ServiceMapClient;
 import com.mashibing.serviceorder.feign.ServicePriceClient;
 import com.mashibing.serviceorder.mapper.OrderInfoMapper;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +22,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -35,6 +40,9 @@ public class OrderInfoService {
 
     @Autowired
     ServiceDriverUserClient serviceDriverUserClient;
+
+    @Autowired
+    ServiceMapClient serviceMapClient;
 
     // 测试代码
     public ResponseResult addInfo() {
@@ -83,8 +91,45 @@ public class OrderInfoService {
         orderInfo.setGmtModified(now);
 
         orderInfoMapper.insert(orderInfo);
+        //进行派单
+        dispatchRealTimeOrder(orderInfo);
 
         return ResponseResult.success("");
+    }
+
+    // 实时订单派送逻辑代码
+    public void dispatchRealTimeOrder(OrderInfo orderInfo) {
+        String depLongitude = orderInfo.getDepLongitude();
+        String depLatitude = orderInfo.getDepLatitude();
+        String center = depLatitude + "," + depLongitude;
+
+        ArrayList<Integer> radiusList = new ArrayList<>();
+        radiusList.add(2000);
+        radiusList.add(4000);
+
+        //搜索结果
+        ResponseResult<List<TerminalResponse>> result = null;
+        for (int i = 0; i < radiusList.size(); i++) {
+            Integer radius = radiusList.get(i);
+            result = serviceMapClient.aroundSearch(center, radius);
+            System.out.println("在半径为" + radius + "的范围内，寻找车辆，结果为：" + JSONArray.fromObject(result.getData()).toString());
+
+            // 获得终端
+
+            // 解析终端
+            JSONArray jsonArray = JSONArray.fromObject(result.getData());
+            for (int j = 0; j < jsonArray.size(); j++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(j);
+                String carId = jsonObject.getString("carId");
+                long parseLong = Long.parseLong(carId);
+            }
+
+            // 根据解析结果出来的终端，查询车辆信息
+
+            // 找到符合的车辆，进行派单
+
+            // 如果派单成功，则退出循环
+        }
     }
 
     //判断下单的城市和计价规则是否存在，即不提供叫车服务

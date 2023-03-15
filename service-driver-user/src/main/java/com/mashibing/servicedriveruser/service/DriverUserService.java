@@ -1,10 +1,14 @@
 package com.mashibing.servicedriveruser.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.mashibing.internalcommon.constant.CommonStatusEnum;
 import com.mashibing.internalcommon.constant.DriverCarConstants;
+import com.mashibing.internalcommon.dto.DriverCarBindingRelationship;
 import com.mashibing.internalcommon.dto.DriverUser;
 import com.mashibing.internalcommon.dto.DriverUserWorkStatus;
 import com.mashibing.internalcommon.dto.ResponseResult;
+import com.mashibing.internalcommon.response.OrderDriverResponse;
+import com.mashibing.servicedriveruser.mapper.DriverCarBindingRelationshipMapper;
 import com.mashibing.servicedriveruser.mapper.DriverUserMapper;
 import com.mashibing.servicedriveruser.mapper.DriverUserWorkStatusMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +26,9 @@ public class DriverUserService {
 
     @Autowired
     DriverUserWorkStatusMapper driverUserWorkStatusMapper;
+
+    @Autowired
+    DriverCarBindingRelationshipMapper driverCarBindingRelationshipMapper;
 
     //测试代码
     public ResponseResult getUser() {
@@ -70,5 +77,34 @@ public class DriverUserService {
         }
         DriverUser driverUser = driverUsers.get(0);
         return ResponseResult.success(driverUser);
+    }
+
+    public ResponseResult<OrderDriverResponse> getAvailableDriver(Long carId) {
+
+        QueryWrapper<DriverCarBindingRelationship> relationshipQueryWrapper = new QueryWrapper<>();
+        relationshipQueryWrapper.eq("car_id", carId);
+        relationshipQueryWrapper.eq("bind_state", DriverCarConstants.DRIVER_CAR_BIND);
+        DriverCarBindingRelationship relationship = driverCarBindingRelationshipMapper.selectOne(relationshipQueryWrapper);
+        Long driverId = relationship.getDriverId();
+
+        QueryWrapper<DriverUserWorkStatus> statusQueryWrapper = new QueryWrapper<>();
+        statusQueryWrapper.eq("driver_id", driverId);
+        statusQueryWrapper.eq("work_status", DriverCarConstants.DRIVER_WORK_STATUS_START);
+
+        DriverUserWorkStatus workStatus = driverUserWorkStatusMapper.selectOne(statusQueryWrapper);
+        if (null == workStatus) {
+            return ResponseResult.fail(CommonStatusEnum.AVAILABLE_DRIVER_EMPTY.getCode(), CommonStatusEnum.AVAILABLE_DRIVER_EMPTY.getValue());
+        } else {
+            QueryWrapper<DriverUser> userQueryWrapper = new QueryWrapper<>();
+            userQueryWrapper.eq("id", driverId);
+            DriverUser driverUser = driverUserMapper.selectOne(userQueryWrapper);
+
+            OrderDriverResponse orderDriverResponse = new OrderDriverResponse();
+            orderDriverResponse.setCarId(carId);
+            orderDriverResponse.setDriverId(driverId);
+            orderDriverResponse.setDriverPhone(driverUser.getDriverPhone());
+
+            return ResponseResult.success(orderDriverResponse);
+        }
     }
 }
