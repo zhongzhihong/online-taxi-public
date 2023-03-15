@@ -8,6 +8,7 @@ import com.mashibing.internalcommon.dto.PriceRule;
 import com.mashibing.internalcommon.dto.ResponseResult;
 import com.mashibing.internalcommon.request.OrderRequest;
 import com.mashibing.internalcommon.util.RedisPrefixUtils;
+import com.mashibing.serviceorder.feign.ServiceDriverUserClient;
 import com.mashibing.serviceorder.feign.ServicePriceClient;
 import com.mashibing.serviceorder.mapper.OrderInfoMapper;
 import org.apache.ibatis.annotations.Param;
@@ -32,6 +33,9 @@ public class OrderInfoService {
     @Autowired
     StringRedisTemplate stringRedisTemplate;
 
+    @Autowired
+    ServiceDriverUserClient serviceDriverUserClient;
+
     // 测试代码
     public ResponseResult addInfo() {
         OrderInfo orderInfo = new OrderInfo();
@@ -42,6 +46,13 @@ public class OrderInfoService {
 
     // 插入订单
     public ResponseResult addOrder(OrderRequest orderRequest) {
+
+        //根据城市编码查询该城市是否有可用司机
+        ResponseResult<Boolean> hasAvailableDriver = serviceDriverUserClient.hasAvailableDriver(orderRequest.getAddress());
+        System.out.println("hasAvailableDriver的结果为：" + hasAvailableDriver);
+        if (!hasAvailableDriver.getData()) {
+            return ResponseResult.fail(CommonStatusEnum.CITY_DRIVER_EMPTY.getCode(), CommonStatusEnum.CITY_DRIVER_EMPTY.getValue());
+        }
 
         //需要判断计价规则的版本是否为最新的
         ResponseResult<Boolean> latestPrice = servicePriceClient.isLatestPrice(orderRequest.getFareType(), orderRequest.getFareVersion());
