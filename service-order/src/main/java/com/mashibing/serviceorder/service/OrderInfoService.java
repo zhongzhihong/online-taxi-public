@@ -102,7 +102,7 @@ public class OrderInfoService {
     }
 
     // 实时订单派送逻辑代码
-    public synchronized void dispatchRealTimeOrder(OrderInfo orderInfo) {
+    public void dispatchRealTimeOrder(OrderInfo orderInfo) {
         String depLongitude = orderInfo.getDepLongitude();
         String depLatitude = orderInfo.getDepLatitude();
         String center = depLatitude + "," + depLongitude;
@@ -141,31 +141,35 @@ public class OrderInfoService {
                     String licenseId = availableDriverData.getLicenseId();
                     String vehicleNo = availableDriverData.getVehicleNo();
 
-                    // 司机有正在进行的订单不允许下单
-                    if (IsDriverOrderGoingOn(driverId) > 0) {
-                        continue;
+                    //将司机ID锁住
+                    synchronized ((driverId + "").intern()) {
+                        // 司机有正在进行的订单不允许下单
+                        if (IsDriverOrderGoingOn(driverId) > 0) {
+                            continue;
+                        }
+
+                        QueryWrapper<Car> carQueryWrapper = new QueryWrapper<>();
+                        carQueryWrapper.eq("id", carId);
+
+                        //查询当前司机信息
+                        orderInfo.setDriverId(driverId);
+                        orderInfo.setDriverPhone(driverPhone);
+                        orderInfo.setCarId(carId);
+
+                        // 从地图中获取信息
+                        orderInfo.setReceiveOrderCarLongitude(longitude);
+                        orderInfo.setReceiveOrderCarLatitude(latitude);
+
+                        orderInfo.setReceiveOrderTime(LocalDateTime.now());
+                        orderInfo.setLicenseId(licenseId);
+                        orderInfo.setVehicleNo(vehicleNo);
+                        orderInfo.setOrderStatus(OrderConstants.DRIVER_RECEIVE_ORDER);
+
+                        orderInfoMapper.updateById(orderInfo);
+
+                        break;
                     }
 
-                    QueryWrapper<Car> carQueryWrapper = new QueryWrapper<>();
-                    carQueryWrapper.eq("id", carId);
-
-                    //查询当前司机信息
-                    orderInfo.setDriverId(driverId);
-                    orderInfo.setDriverPhone(driverPhone);
-                    orderInfo.setCarId(carId);
-
-                    // 从地图中获取信息
-                    orderInfo.setReceiveOrderCarLongitude(longitude);
-                    orderInfo.setReceiveOrderCarLatitude(latitude);
-
-                    orderInfo.setReceiveOrderTime(LocalDateTime.now());
-                    orderInfo.setLicenseId(licenseId);
-                    orderInfo.setVehicleNo(vehicleNo);
-                    orderInfo.setOrderStatus(OrderConstants.DRIVER_RECEIVE_ORDER);
-
-                    orderInfoMapper.updateById(orderInfo);
-
-                    break;
                 }
             }
 
