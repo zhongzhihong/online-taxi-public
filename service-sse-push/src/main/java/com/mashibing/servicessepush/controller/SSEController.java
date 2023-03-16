@@ -1,5 +1,6 @@
 package com.mashibing.servicessepush.controller;
 
+import com.mashibing.internalcommon.util.SsePrefixUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,35 +16,43 @@ public class SSEController {
 
     public static Map<String, SseEmitter> map = new HashMap<>();
 
-    @GetMapping("/connect/{driverId}")
-    public SseEmitter connect(@PathVariable String driverId) {
-        System.out.println("司机ID=" + driverId);
+    //建立连接
+    @GetMapping("/connect")
+    public SseEmitter connect(@RequestParam Long userId, @RequestParam String identity) {
+        System.out.println("userId=" + userId + ",identity=" + identity);
         SseEmitter sseEmitter = new SseEmitter(0l);
 
-        map.put(driverId, sseEmitter);
+        String sseKey = SsePrefixUtils.generatorSseKey(userId, identity);
+        map.put(sseKey, sseEmitter);
 
         return sseEmitter;
     }
 
+    //推送消息
     @GetMapping("/push")
-    public String push(@RequestParam String driverId, @RequestParam String content) {
+    public String push(@RequestParam Long userId, @RequestParam String identity, @RequestParam String content) {
+        String sseKey = SsePrefixUtils.generatorSseKey(userId, identity);
+
         try {
-            if (map.containsKey(driverId)) {
-                map.get(driverId).send(content);
+            if (map.containsKey(sseKey)) {
+                map.get(sseKey).send(content);
             } else {
                 return "推送消息失败";
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return "给用户" + driverId + "发送的消息内容为：" + content;
+        return "给用户" + sseKey + "发送的消息内容为：" + content;
     }
 
-    @GetMapping("/close/{driverId}")
-    public String close(@PathVariable String driverId) {
-        System.out.println("关闭连接" + driverId);
-        if (map.containsKey(driverId)) {
-            map.remove(driverId);
+    //关闭连接
+    @GetMapping("/close")
+    public String close(@RequestParam Long userId, @RequestParam String identity) {
+        String sseKey = SsePrefixUtils.generatorSseKey(userId, identity);
+
+        System.out.println("关闭连接" + sseKey);
+        if (map.containsKey(sseKey)) {
+            map.remove(sseKey);
         }
         return "关闭成功";
     }
