@@ -1,7 +1,6 @@
 package com.mashibing.serviceorder.controller;
 
 
-import com.mashibing.internalcommon.dto.PriceRule;
 import com.mashibing.internalcommon.dto.ResponseResult;
 import com.mashibing.internalcommon.request.OrderRequest;
 import com.mashibing.serviceorder.service.OrderInfoService;
@@ -33,6 +32,30 @@ public class OrderInfoController {
     @PostMapping("/addOrder")
     public ResponseResult addOrder(@RequestBody OrderRequest orderRequest) {
         return orderInfoService.addOrder(orderRequest);
+    }
+
+    // 司机去接乘客
+    @PostMapping("/toPickUpPassenger")
+    public ResponseResult toPickUpPassenger(@RequestBody OrderRequest orderRequest) {
+        return orderInfoService.toPickUpPassenger(orderRequest);
+    }
+
+    // 司机到达乘客上车点
+    @PostMapping("/arriveDeparture")
+    public ResponseResult arriveDeparture(@RequestBody OrderRequest orderRequest) {
+        return orderInfoService.arriveDeparture(orderRequest);
+    }
+
+    // 司机接到乘客
+    @PostMapping("/pickUpPassenger")
+    public ResponseResult pickUpPassenger(@RequestBody OrderRequest orderRequest) {
+        return orderInfoService.pickUpPassenger(orderRequest);
+    }
+
+    // 乘客到达目的地
+    @PostMapping("/passengerGetOff")
+    public ResponseResult passengerGetOff(@RequestBody OrderRequest orderRequest){
+        return orderInfoService.passengerGetOff(orderRequest);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.mashibing.serviceorder.feign;
 
+import com.mashibing.internalcommon.dto.Car;
 import com.mashibing.internalcommon.dto.ResponseResult;
 import com.mashibing.internalcommon.response.OrderDriverResponse;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -15,5 +16,8 @@ public interface ServiceDriverUserClient {
 
     // 根据车辆ID，查询可以派单的司机的信息
     @GetMapping("/getAvailableDriver/{carId}")
-    ResponseResult<OrderDriverResponse> getAvailableDriver(@PathVariable("carId") Long carId) ;
+    ResponseResult<OrderDriverResponse> getAvailableDriver(@PathVariable("carId") Long carId);
+
+    @GetMapping("/car")
+    ResponseResult<Car> getCarInfoById(@RequestParam Long carId);
 }
