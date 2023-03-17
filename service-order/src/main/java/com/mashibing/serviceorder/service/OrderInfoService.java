@@ -238,6 +238,7 @@ public class OrderInfoService {
                     pushRequest.setUserId(driverId);
                     pushRequest.setIdentity(IdentityConstants.DRIVER_IDENTITY);
                     pushRequest.setContent(driverContent.toString());
+                    System.out.println(pushRequest);
 
                     serviceSsePushClient.push(pushRequest);
 
@@ -262,6 +263,7 @@ public class OrderInfoService {
                     pushRequest1.setUserId(orderInfo.getPassengerId());
                     pushRequest1.setIdentity(IdentityConstants.PASSENGER_IDENTITY);
                     pushRequest1.setContent(passengerContent.toString());
+                    System.out.println(pushRequest1);
 
                     serviceSsePushClient.push(pushRequest1);
 
@@ -456,6 +458,9 @@ public class OrderInfoService {
         // 获取价格，调用远程服务进行获取
         String address = orderInfo.getAddress();
         String vehicleType = orderInfo.getVehicleType();
+
+        System.out.println("driveMile:" + driveMile + ",driveTime:" + driveTime + ",address:" + address + ",vehicleType:" + vehicleType);
+
         ResponseResult<Double> calculatePrice = servicePriceClient.calculatePrice(driveMile.intValue(), driveTime.intValue(), address, vehicleType);
         Double priceData = calculatePrice.getData();
         orderInfo.setPrice(priceData);
@@ -556,6 +561,16 @@ public class OrderInfoService {
         orderInfo.setOrderStatus(OrderConstants.ORDER_CANCEL);
 
         orderInfoMapper.updateById(orderInfo);
+        return ResponseResult.success("");
+    }
+
+    public ResponseResult pushPayInfo(OrderRequest orderRequest) {
+        Long orderId = orderRequest.getOrderId();
+
+        OrderInfo orderInfo = orderInfoMapper.selectById(orderId);
+        orderInfo.setOrderStatus(OrderConstants.TO_START_PAY);
+        orderInfoMapper.updateById(orderInfo);
+
         return ResponseResult.success("");
     }
 }

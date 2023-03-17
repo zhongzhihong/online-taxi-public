@@ -2,6 +2,7 @@ package com.mashibing.servicessepush.controller;
 
 import com.mashibing.internalcommon.request.PushRequest;
 import com.mashibing.internalcommon.util.SsePrefixUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -10,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
+@Slf4j
 public class SSEController {
 
     public static Map<String, SseEmitter> map = new HashMap<>();
@@ -17,7 +19,7 @@ public class SSEController {
     //建立连接
     @GetMapping("/connect")
     public SseEmitter connect(@RequestParam Long userId, @RequestParam String identity) {
-        System.out.println("userId=" + userId + ",identity=" + identity);
+//        System.out.println("userId=" + userId + ",identity=" + identity);
         SseEmitter sseEmitter = new SseEmitter(0l);
 
         String sseKey = SsePrefixUtils.generatorSseKey(userId, identity);
@@ -32,6 +34,7 @@ public class SSEController {
         Long userId = pushRequest.getUserId();
         String identity = pushRequest.getIdentity();
         String content = pushRequest.getContent();
+        log.info("用户ID："+userId+",身份："+identity);
         String sseKey = SsePrefixUtils.generatorSseKey(userId, identity);
 
         try {

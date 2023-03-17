@@ -28,6 +28,9 @@ public interface ServerOrderClient {
     @PostMapping("/passengerGetOff")
     ResponseResult passengerGetOff(@RequestBody OrderRequest orderRequest);
 
+    @PostMapping("/pushPayInfo")
+    ResponseResult pushPayInfo(@RequestBody OrderRequest orderRequest);
+
     // 取消订单
     @PostMapping("/cancel")
     ResponseResult cancel(@RequestParam Long orderId, @RequestParam String identity);

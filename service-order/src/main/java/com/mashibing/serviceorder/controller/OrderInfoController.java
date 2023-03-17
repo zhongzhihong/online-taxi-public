@@ -58,6 +58,11 @@ public class OrderInfoController {
         return orderInfoService.passengerGetOff(orderRequest);
     }
 
+    @PostMapping("/pushPayInfo")
+    public ResponseResult pushPayInfo(@RequestBody OrderRequest orderRequest){
+        return orderInfoService.pushPayInfo(orderRequest);
+    }
+
     // 订单支付完成
     @PostMapping("/pay")
     public ResponseResult pay(@RequestBody OrderRequest orderRequest) {
