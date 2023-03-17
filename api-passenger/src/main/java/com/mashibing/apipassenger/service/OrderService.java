@@ -1,6 +1,7 @@
 package com.mashibing.apipassenger.service;
 
 import com.mashibing.apipassenger.feign.ServiceOrderClient;
+import com.mashibing.internalcommon.constant.IdentityConstants;
 import com.mashibing.internalcommon.dto.ResponseResult;
 import com.mashibing.internalcommon.request.OrderRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,10 @@ public class OrderService {
 
     public ResponseResult add(@RequestBody OrderRequest orderRequest) {
         return serviceOrderClient.add(orderRequest);
+    }
+
+    public ResponseResult cancel(Long orderId) {
+        return serviceOrderClient.cancel(orderId, IdentityConstants.PASSENGER_IDENTITY);
     }
 
 }

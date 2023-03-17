@@ -6,6 +6,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient("service-order")
 @RequestMapping("/order-info")
@@ -26,5 +27,8 @@ public interface ServerOrderClient {
     // 乘客到达目的地
     @PostMapping("/passengerGetOff")
     ResponseResult passengerGetOff(@RequestBody OrderRequest orderRequest);
+
+    // 取消订单
+    ResponseResult cancel(@RequestParam Long orderId, @RequestParam String identity);
 
 }
