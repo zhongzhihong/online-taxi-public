@@ -54,14 +54,20 @@ public class OrderInfoController {
 
     // 乘客到达目的地
     @PostMapping("/passengerGetOff")
-    public ResponseResult passengerGetOff(@RequestBody OrderRequest orderRequest){
+    public ResponseResult passengerGetOff(@RequestBody OrderRequest orderRequest) {
         return orderInfoService.passengerGetOff(orderRequest);
     }
 
     // 订单支付完成
     @PostMapping("/pay")
-    public ResponseResult pay(@RequestBody OrderRequest orderRequest){
+    public ResponseResult pay(@RequestBody OrderRequest orderRequest) {
         return orderInfoService.pay(orderRequest);
+    }
+
+    // 订单取消
+    @PostMapping("/cancel")
+    public ResponseResult cancel(Long orderId, String identity) {
+        return orderInfoService.cancel(orderId, identity);
     }
 
 }
