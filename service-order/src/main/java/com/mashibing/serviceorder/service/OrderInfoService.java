@@ -116,15 +116,19 @@ public class OrderInfoService {
             if (result == 1) {
                 break;
             }
-
-            try {
-                //等待20s
-                Thread.sleep(20000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            if (i == 5) {
+                // 订单无效
+                orderInfo.setOrderStatus(OrderConstants.ORDER_INVALID);
+                orderInfoMapper.updateById(orderInfo);
+            } else {
+                try {
+                    //等待20s
+                    Thread.sleep(20000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
-
         return ResponseResult.success("");
     }
 
@@ -506,7 +510,7 @@ public class OrderInfoService {
                     break;
                 // 司机去接乘客
                 case OrderConstants.DRIVER_TO_PICK_UP_PASSENGER:
-                // 司机到达乘客起点
+                    // 司机到达乘客起点
                 case OrderConstants.DRIVER_ARRIVED_DEPARTURE:
                     cancelTypeCode = OrderConstants.CANCEL_PASSENGER_ILLEGAL;
                     break;
