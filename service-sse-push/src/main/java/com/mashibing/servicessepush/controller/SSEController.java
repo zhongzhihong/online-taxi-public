@@ -1,9 +1,8 @@
 package com.mashibing.servicessepush.controller;
 
+import com.mashibing.internalcommon.request.PushRequest;
 import com.mashibing.internalcommon.util.SsePrefixUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
@@ -28,8 +27,11 @@ public class SSEController {
     }
 
     //推送消息
-    @GetMapping("/push")
-    public String push(@RequestParam Long userId, @RequestParam String identity, @RequestParam String content) {
+    @PostMapping("/push")
+    public String push(@RequestBody PushRequest pushRequest) {
+        Long userId = pushRequest.getUserId();
+        String identity = pushRequest.getIdentity();
+        String content = pushRequest.getContent();
         String sseKey = SsePrefixUtils.generatorSseKey(userId, identity);
 
         try {

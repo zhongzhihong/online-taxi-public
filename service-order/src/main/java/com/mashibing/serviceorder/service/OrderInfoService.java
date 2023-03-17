@@ -86,8 +86,9 @@ public class OrderInfoService {
         }
 
         // 当前设备是黑名单设备不允许下单
-        if (isBlackDevice(orderRequest))
-            return ResponseResult.fail(CommonStatusEnum.DEVICE_IS_BLACK.getCode(), CommonStatusEnum.DEVICE_IS_BLACK.getValue());
+//        if (isBlackDevice(orderRequest)){
+//            return ResponseResult.fail(CommonStatusEnum.DEVICE_IS_BLACK.getCode(), CommonStatusEnum.DEVICE_IS_BLACK.getValue());
+//        }
 
         // 当前下单的城市和计价规则不存在，即不提供叫车服务
         if (!ifExist(orderRequest)) {
