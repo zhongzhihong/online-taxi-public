@@ -1,10 +1,12 @@
 package com.mashibing.servicedriveruser.controller;
 
 import com.mashibing.internalcommon.constant.DriverCarConstants;
+import com.mashibing.internalcommon.dto.DriverCarBindingRelationship;
 import com.mashibing.internalcommon.dto.DriverUser;
 import com.mashibing.internalcommon.dto.ResponseResult;
 import com.mashibing.internalcommon.response.DriverUserExistsResponse;
 import com.mashibing.internalcommon.response.OrderDriverResponse;
+import com.mashibing.servicedriveruser.service.DriverCarBindingRelationshipService;
 import com.mashibing.servicedriveruser.service.DriverUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +16,9 @@ public class UserController {
 
     @Autowired
     DriverUserService driverUserService;
+
+    @Autowired
+    DriverCarBindingRelationshipService driverCarBindingRelationshipService;
 
     @PostMapping("/user")
     public ResponseResult addUser(@RequestBody DriverUser driverUser) {
@@ -48,6 +53,12 @@ public class UserController {
     @GetMapping("/getAvailableDriver/{carId}")
     public ResponseResult<OrderDriverResponse> getAvailableDriver(@PathVariable("carId") Long carId) {
         return driverUserService.getAvailableDriver(carId);
+    }
+
+    // 根据司机手机号查询司机和车辆绑定关系
+    @GetMapping("/driver-car-binding-relationship")
+    public ResponseResult<DriverCarBindingRelationship> getDriverCarRelationShip(@RequestParam String driverPhone){
+        return driverCarBindingRelationshipService.getDriverCarRelationShipByDriverPhone(driverPhone);
     }
 
 }

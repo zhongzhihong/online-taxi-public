@@ -4,8 +4,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.mashibing.internalcommon.constant.CommonStatusEnum;
 import com.mashibing.internalcommon.constant.DriverCarConstants;
 import com.mashibing.internalcommon.dto.DriverCarBindingRelationship;
+import com.mashibing.internalcommon.dto.DriverUser;
 import com.mashibing.internalcommon.dto.ResponseResult;
 import com.mashibing.servicedriveruser.mapper.DriverCarBindingRelationshipMapper;
+import com.mashibing.servicedriveruser.mapper.DriverUserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,9 @@ public class DriverCarBindingRelationshipService {
 
     @Autowired
     DriverCarBindingRelationshipMapper driverCarBindingRelationshipMapper;
+
+    @Autowired
+    DriverUserMapper driverUserMapper;
 
     //司机车辆绑定
     public ResponseResult bind(DriverCarBindingRelationship driverCarBindingRelationship) {
@@ -78,5 +83,20 @@ public class DriverCarBindingRelationshipService {
 
         driverCarBindingRelationshipMapper.updateById(relationship);
         return ResponseResult.success("");
+    }
+
+    public ResponseResult<DriverCarBindingRelationship> getDriverCarRelationShipByDriverPhone(String driverPhone) {
+        QueryWrapper<DriverUser> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("driver_phone", driverPhone);
+
+        DriverUser driverUser = driverUserMapper.selectOne(queryWrapper);
+        Long driverId = driverUser.getId();
+
+        QueryWrapper<DriverCarBindingRelationship> driverCarBindingRelationshipQueryWrapper = new QueryWrapper<>();
+        driverCarBindingRelationshipQueryWrapper.eq("driver_id", driverId);
+        driverCarBindingRelationshipQueryWrapper.eq("bind_state", DriverCarConstants.DRIVER_CAR_BIND);
+
+        DriverCarBindingRelationship driverCarBindingRelationship = driverCarBindingRelationshipMapper.selectOne(driverCarBindingRelationshipQueryWrapper);
+        return ResponseResult.success(driverCarBindingRelationship);
     }
 }
