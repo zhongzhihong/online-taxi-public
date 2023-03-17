@@ -447,6 +447,13 @@ public class OrderInfoService {
         orderInfo.setDriveMile(driveMile);
         orderInfo.setDriveTime(driveTime);
 
+        // 获取价格，调用远程服务进行获取
+        String address = orderInfo.getAddress();
+        String vehicleType = orderInfo.getVehicleType();
+        ResponseResult<Double> calculatePrice = servicePriceClient.calculatePrice(driveMile.intValue(), driveTime.intValue(), address, vehicleType);
+        Double priceData = calculatePrice.getData();
+        orderInfo.setPrice(priceData);
+
         // 更新订单信息
         orderInfoMapper.updateById(orderInfo);
         return ResponseResult.success("");
