@@ -470,6 +470,7 @@ public class OrderInfoService {
         return ResponseResult.success("");
     }
 
+    // 运行这里的代码之前，需要先将花生壳打开，因为需要用到内网穿透才能得到支付宝的响应
     // 订单支付完成
     public ResponseResult pay(OrderRequest orderRequest) {
 
